@@ -9,6 +9,9 @@ import { useState } from 'react'
 import { Product } from '@/types/Product'
 import Image from 'next/image'
 import EditProductModal from './EditProductModal'
+import NewProductModal from './NewProductModal'
+import { v4 as uuidv4} from 'uuid'
+
 
 interface Props {
   products: Product[]
@@ -18,6 +21,8 @@ export default function ProductTable({ products:initalProducts }: Props) {
   const [search, setSearch] = useState('')
   const [products, setProducts] = useState<Product[]>(initalProducts)
   const [selectedProduct, setSelectedProduct] = useState<Product | null> (null)
+  const [showNewModal, setShowNewModal] = useState(false)
+
 
   const filtered = products.filter(p =>
     p.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -28,12 +33,17 @@ export default function ProductTable({ products:initalProducts }: Props) {
     setProducts(prev => prev.map(p => (p.id === updated.id ? updated : p)))
   }
 
+  const handleCreate = (newProd: Omit<Product, 'id'>) => {
+    const productWithId = { ...newProd, id: uuidv4()}
+    setProducts(prev => [ ...prev, productWithId])
+  }
+
   return (
     <main className="min-vh-100 bg-light py-5 px-3">
       <div className="mx-auto" style={{ maxWidth: 960 }}>
         <div className="bg-primary text-white rounded-top p-4 d-flex justify-content-between align-items-center">
           <h2 className="m-0">Painel de Produtos</h2>
-          <button className="btn btn-light text-primary rounded-pill px-4 fw-bold">Novo Produto</button>
+          <button className="btn btn-light text-primary rounded-pill px-4 fw-bold" onClick={() => setShowNewModal(true)}>Novo Produto</button>
         </div>
 
         <div className="bg-white rounded-bottom shadow-sm p-4">
@@ -83,11 +93,20 @@ export default function ProductTable({ products:initalProducts }: Props) {
           </div>
         </div>
       </div>
+      {/*Esta é a modal de edição de produto.*/ }
       {selectedProduct && (
         <EditProductModal
           product={selectedProduct}
           onSave={handleSave}
           onClose={() => setSelectedProduct(null)}
+        />
+      )}
+
+      {/*Esta é a modal de criação de produto.*/ }
+      {showNewModal && (
+        <NewProductModal
+          onSave={handleCreate}
+          onClose={() => setShowNewModal(false)}
         />
       )}
     </main>
