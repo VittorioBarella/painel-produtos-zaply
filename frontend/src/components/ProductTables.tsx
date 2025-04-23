@@ -8,18 +8,25 @@
 import { useState } from 'react'
 import { Product } from '@/types/Product'
 import Image from 'next/image'
+import EditProductModal from './EditProductModal'
 
 interface Props {
   products: Product[]
 }
 
-export default function ProductTable({ products }: Props) {
+export default function ProductTable({ products:initalProducts }: Props) {
   const [search, setSearch] = useState('')
+  const [products, setProducts] = useState<Product[]>(initalProducts)
+  const [selectedProduct, setSelectedProduct] = useState<Product | null> (null)
 
   const filtered = products.filter(p =>
     p.name.toLowerCase().includes(search.toLowerCase()) ||
     p.brand.toLowerCase().includes(search.toLowerCase())
   )
+
+  const handleSave = (updated: Product) => {
+    setProducts(prev => prev.map(p => (p.id === updated.id ? updated : p)))
+  }
 
   return (
     <main className="min-vh-100 bg-light py-5 px-3">
@@ -66,7 +73,8 @@ export default function ProductTable({ products }: Props) {
                     <td>{prod.brand}</td>
                     <td>{prod.categories}</td>
                     <td>
-                      <button className="btn btn-primary btn-sm rounded-pill px-3">Editar</button>
+                      <button className="btn btn-primary btn-sm rounded-pill px-3"
+                      onClick={() => setSelectedProduct(prod)}>Editar</button>
                     </td>
                   </tr>
                 ))}
@@ -75,6 +83,13 @@ export default function ProductTable({ products }: Props) {
           </div>
         </div>
       </div>
+      {selectedProduct && (
+        <EditProductModal
+          product={selectedProduct}
+          onSave={handleSave}
+          onClose={() => setSelectedProduct(null)}
+        />
+      )}
     </main>
   )
 }
