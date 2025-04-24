@@ -1,4 +1,5 @@
 [phases.setup]
+nixPkgs = ["nodejs"]
 nixpkgsArchive = "23.11"
 
 [phases.install]
