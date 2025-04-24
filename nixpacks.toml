@@ -1,0 +1,11 @@
+[phases.setup]
+nixpkgsArchive = "23.11"
+
+[phases.install]
+cmds = ["cd backend && npm install"]
+
+[phases.build]
+cmds = []
+
+[start]
+cmd = "cd backend && node server.js"
