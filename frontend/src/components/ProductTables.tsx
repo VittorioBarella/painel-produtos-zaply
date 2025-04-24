@@ -3,18 +3,13 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { Product } from '@/types/Product'
-import Image from 'next/image'
 import EditProductModal from './EditProductModal'
 import NewProductModal from './NewProductModal'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import { FiMenu } from 'react-icons/fi' // ícone do menu
+import { FiMenu } from 'react-icons/fi'
 
-interface Props {
-  products: Product[]
-}
-
-export default function ProductTable({ products: initialProducts }: Props) {
+export default function ProductTable() {
   const [search, setSearch] = useState('')
   const [products, setProducts] = useState<Product[]>([])
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
@@ -75,7 +70,6 @@ export default function ProductTable({ products: initialProducts }: Props) {
         <div className="bg-primary text-white rounded-top p-4 d-flex justify-content-between align-items-center">
           <h2 className="m-0">Painel de Produtos</h2>
 
-          {/* Botão no desktop */}
           <button
             className="btn btn-light text-primary rounded-pill px-4 fw-bold d-none d-md-block"
             onClick={() => setShowNewModal(true)}
@@ -83,7 +77,6 @@ export default function ProductTable({ products: initialProducts }: Props) {
             Novo Produto
           </button>
 
-          {/* Menu hamburguer no mobile */}
           <button
             className="btn btn-light text-primary d-block d-md-none"
             onClick={() => setShowMobileMenu(!showMobileMenu)}
