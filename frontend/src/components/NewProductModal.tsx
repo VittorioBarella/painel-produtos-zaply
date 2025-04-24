@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { Product } from '@/types/Product'
-import axios from 'axios'
+import api from '@/services/api'
 
 interface Props {
   onSave: (newProduct: Product) => void
@@ -48,29 +48,29 @@ export default function NewProductModal({ onSave, onClose }: Props) {
     const priceFormatted = parseFloat(
       form.price.replace(/\./g, '').replace(',', '.')
     );
-  
+
     if (!form.name || !form.brand || !form.categories || !imageFile || isNaN(priceFormatted) || priceFormatted <= 0) {
       setError('Preencha todos os campos corretamente.');
       return;
     }
-  
+
     const formData = new FormData();
     formData.append('name', form.name);
     formData.append('brand', form.brand);
     formData.append('categories', form.categories);
     formData.append('price', priceFormatted.toString());
     formData.append('image', imageFile);
-  
+
     try {
-      const res = await axios.post('http://localhost:5000/api/products', formData, {
+      const res = await api.post('/products', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
-    
+
       const normalizedProduct: Product = {
         ...res.data,
-        price: parseFloat(res.data.price), 
+        price: parseFloat(res.data.price),
       };
-    
+
       onSave(normalizedProduct);
       onClose();
     } catch (err) {
@@ -78,7 +78,6 @@ export default function NewProductModal({ onSave, onClose }: Props) {
       setError('Erro ao salvar produto.');
     }
   };
-  
 
   return (
     <div className="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 d-flex justify-content-center align-items-center">

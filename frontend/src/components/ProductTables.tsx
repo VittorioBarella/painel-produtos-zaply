@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import api from '@/services/api' 
 import { Product } from '@/types/Product'
 import EditProductModal from './EditProductModal'
 import NewProductModal from './NewProductModal'
@@ -19,7 +19,7 @@ export default function ProductTable() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/products')
+        const res = await api.get('/products')
         setProducts(res.data)
       } catch (err) {
         toast.error('Erro ao carregar os produtos.')
@@ -36,7 +36,7 @@ export default function ProductTable() {
 
   const handleSave = async (updated: Product) => {
     try {
-      await axios.put(`http://localhost:5000/api/products/${updated.id}`, updated)
+      await api.put(`/products/${updated.id}`, updated)
       setProducts(prev => prev.map(p => (p.id === updated.id ? updated : p)))
       toast.success('Produto atualizado!')
     } catch (err) {
@@ -55,7 +55,7 @@ export default function ProductTable() {
     if (!confirmDelete) return
 
     try {
-      await axios.delete(`http://localhost:5000/api/products/${id}`)
+      await api.delete(`/products/${id}`)
       setProducts(prev => prev.filter(p => p.id !== id))
       toast.warn('Produto removido!')
     } catch (err) {
@@ -121,7 +121,7 @@ export default function ProductTable() {
                   <tr key={prod.id}>
                     <td>
                       <img
-                        src={`http://localhost:5000${prod.image || '/default.png'}`}
+                        src={`${process.env.NEXT_PUBLIC_API_URL}${prod.image || '/default.png'}`}
                         alt={prod.name}
                         width={50}
                         height={50}

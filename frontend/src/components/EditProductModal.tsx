@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { Product } from '@/types/Product'
+import api from '@/services/api'
 
 interface Props {
   product: Product | null
@@ -30,7 +31,7 @@ export default function EditProductModal({ product, onSave, onClose }: Props) {
         ...product,
         price: product.price.toString().replace('.', ',') 
       })
-      setPreview(`http://localhost:5000${product.image}`)
+      setPreview(`${process.env.NEXT_PUBLIC_API_URL}${product.image}`)
     }
   }, [product])
 
@@ -79,12 +80,10 @@ export default function EditProductModal({ product, onSave, onClose }: Props) {
     }
 
     try {
-      const res = await fetch(`http://localhost:5000/api/products/${form.id}`, {
-        method: 'PUT',
-        body: formData
+      const res = await api.put(`/products/${form.id}`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
       })
-      const data = await res.json()
-      onSave(data)
+      onSave(res.data)
       onClose()
     } catch (err) {
       console.error(err)
