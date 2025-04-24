@@ -11,6 +11,7 @@ interface Props {
 
 export default function EditProductModal({ product, onSave, onClose }: Props) {
   const [form, setForm] = useState<Product | null>(null)
+  const [error, setError] = useState('')
 
   useEffect(() => {
     if (product) setForm(product)
@@ -23,7 +24,24 @@ export default function EditProductModal({ product, onSave, onClose }: Props) {
     setForm({ ...form, [name]: name === 'price' ? parseFloat(value) : value })
   }
 
+  const isValidURL = (str: string) => {
+    try {
+      new URL(str)
+      return true
+    } catch {
+      return false
+    }
+  }
+
   const handleSubmit = () => {
+    if (!form.name || !form.brand || !form.categories || !form.image || form.price <= 0) {
+      setError('Preencha todos os campos corretamente.')
+      return
+    }
+    if (!isValidURL(form.image)) {
+      setError('Informe uma URL válida para a imagem.')
+      return
+    }
     onSave(form)
     onClose()
   }
@@ -37,6 +55,8 @@ export default function EditProductModal({ product, onSave, onClose }: Props) {
             <button type="button" className="btn-close" onClick={onClose}></button>
           </div>
           <div className="modal-body">
+            {error && <div className="alert alert-danger py-2 px-3">{error}</div>}
+
             <input type="text" name="name" className="form-control mb-2" placeholder="Nome"
               value={form.name} onChange={handleChange} />
             <input type="text" name="brand" className="form-control mb-2" placeholder="Marca"

@@ -18,12 +18,36 @@ export default function NewProductModal({ onSave, onClose }: Props) {
     image: ''
   })
 
+  const [error, setError] = useState('')
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
-    setForm(prev => ({ ...prev, [name]: name === 'price' ? parseFloat(value) : value }))
+    setForm(prev => ({
+      ...prev,
+      [name]: name === 'price' ? parseFloat(value) || 0 : value 
+    }))
+  }
+  
+
+  const isValidURL = (str: string) => {
+    try {
+      new URL(str)
+      return true
+    } catch {
+      return false
+    }
   }
 
   const handleSubmit = () => {
+    if (!form.name || !form.brand || !form.categories || !form.image || form.price <= 0) {
+      setError('Preencha todos os campos corretamente.')
+      return
+    }
+    if (!isValidURL(form.image)) {
+      setError('Informe uma URL válida para a imagem.')
+      return
+    }
+
     const newProduct: Product = {
       id: uuidv4(),
       ...form
@@ -40,16 +64,18 @@ export default function NewProductModal({ onSave, onClose }: Props) {
           <button className="btn-close" onClick={onClose}></button>
         </div>
 
+        {error && <div className="alert alert-danger py-2 px-3">{error}</div>}
+
         <label className="form-label text-dark fw-semibold">Nome</label>
-        <input className="form-control mb-2" placeholder="Adicione seu nome" name="name" value={form.name} onChange={handleChange} />
+        <input className="form-control mb-2" placeholder="Nome do produto" name="name" value={form.name} onChange={handleChange} />
 
         <label className="form-label text-dark fw-semibold">Marca</label>
-        <input className="form-control mb-2" placeholder="Adicione a marca" name="brand" value={form.brand} onChange={handleChange} />
+        <input className="form-control mb-2" placeholder="Marca do produto" name="brand" value={form.brand} onChange={handleChange} />
 
         <label className="form-label text-dark fw-semibold">Categoria</label>
-        <input className="form-control mb-2" placeholder="Diga a qual categoria pertence" name="categories" value={form.categories} onChange={handleChange} />
+        <input className="form-control mb-2" placeholder="Categoria do produto" name="categories" value={form.categories} onChange={handleChange} />
 
-        <label className="form-label text-dark fw-semibold mt-2">Preço:</label>
+        <label className="form-label text-dark fw-semibold">Preço</label>
         <input className="form-control mb-2" placeholder="Preço" name="price" type="number" value={form.price} onChange={handleChange} />
 
         <label className="form-label text-dark fw-semibold">URL da imagem</label>
