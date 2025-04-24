@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { Product } from '@/types/Product'
-import { v4 as uuidv4 } from 'uuid'
+import axios from 'axios'
 
 interface Props {
   onSave: (newProduct: Product) => void
@@ -14,47 +14,71 @@ export default function NewProductModal({ onSave, onClose }: Props) {
     name: '',
     brand: '',
     categories: '',
-    price: 0,
+    price: '',
     image: ''
   })
-
+  const [imageFile, setImageFile] = useState<File | null>(null)
   const [error, setError] = useState('')
+  const [preview, setPreview] = useState('')
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
-    setForm(prev => ({
-      ...prev,
-      [name]: name === 'price' ? parseFloat(value) || 0 : value 
-    }))
+    const { name, value, files } = e.target as HTMLInputElement & {
+      files: FileList
+    }
+
+    if (name === 'price') {
+      const regex = /^[0-9.,]*$/;
+      if (!regex.test(value)) {
+        setError('Insira apenas números e vírgulas.');
+        return;
+      }
+      setError('');
+      setForm(prev => ({ ...prev, price: value }));
+    } else if (name === 'image' && files && files[0]) {
+      const file = files[0]
+      setImageFile(file)
+      const imageUrl = URL.createObjectURL(file)
+      setPreview(imageUrl)
+    } else {
+      setForm(prev => ({ ...prev, [name]: value }))
+    }
   }
+
+  const handleSubmit = async () => {
+    const priceFormatted = parseFloat(
+      form.price.replace(/\./g, '').replace(',', '.')
+    );
   
-
-  const isValidURL = (str: string) => {
+    if (!form.name || !form.brand || !form.categories || !imageFile || isNaN(priceFormatted) || priceFormatted <= 0) {
+      setError('Preencha todos os campos corretamente.');
+      return;
+    }
+  
+    const formData = new FormData();
+    formData.append('name', form.name);
+    formData.append('brand', form.brand);
+    formData.append('categories', form.categories);
+    formData.append('price', priceFormatted.toString());
+    formData.append('image', imageFile);
+  
     try {
-      new URL(str)
-      return true
-    } catch {
-      return false
+      const res = await axios.post('http://localhost:5000/api/products', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+    
+      const normalizedProduct: Product = {
+        ...res.data,
+        price: parseFloat(res.data.price), 
+      };
+    
+      onSave(normalizedProduct);
+      onClose();
+    } catch (err) {
+      console.error(err);
+      setError('Erro ao salvar produto.');
     }
-  }
-
-  const handleSubmit = () => {
-    if (!form.name || !form.brand || !form.categories || !form.image || form.price <= 0) {
-      setError('Preencha todos os campos corretamente.')
-      return
-    }
-    if (!isValidURL(form.image)) {
-      setError('Informe uma URL válida para a imagem.')
-      return
-    }
-
-    const newProduct: Product = {
-      id: uuidv4(),
-      ...form
-    }
-    onSave(newProduct)
-    onClose()
-  }
+  };
+  
 
   return (
     <div className="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 d-flex justify-content-center align-items-center">
@@ -67,19 +91,20 @@ export default function NewProductModal({ onSave, onClose }: Props) {
         {error && <div className="alert alert-danger py-2 px-3">{error}</div>}
 
         <label className="form-label text-dark fw-semibold">Nome</label>
-        <input className="form-control mb-2" placeholder="Nome do produto" name="name" value={form.name} onChange={handleChange} />
+        <input className="form-control mb-2" name="name" value={form.name} onChange={handleChange} />
 
         <label className="form-label text-dark fw-semibold">Marca</label>
-        <input className="form-control mb-2" placeholder="Marca do produto" name="brand" value={form.brand} onChange={handleChange} />
+        <input className="form-control mb-2" name="brand" value={form.brand} onChange={handleChange} />
 
         <label className="form-label text-dark fw-semibold">Categoria</label>
-        <input className="form-control mb-2" placeholder="Categoria do produto" name="categories" value={form.categories} onChange={handleChange} />
+        <input className="form-control mb-2" name="categories" value={form.categories} onChange={handleChange} />
 
         <label className="form-label text-dark fw-semibold">Preço</label>
-        <input className="form-control mb-2" placeholder="Preço" name="price" type="number" value={form.price} onChange={handleChange} />
+        <input className="form-control mb-2" name="price" value={form.price} onChange={handleChange} />
 
-        <label className="form-label text-dark fw-semibold">URL da imagem</label>
-        <input className="form-control mb-3" placeholder="Cole aqui a URL da imagem" name="image" value={form.image} onChange={handleChange} />
+        <label className="form-label text-dark fw-semibold">Imagem</label>
+        <input type="file" accept="image/*" name="image" onChange={handleChange} className="form-control mb-3" />
+        {preview && <img src={preview} alt="Preview" className="img-thumbnail mb-3" width={120} />}
 
         <div className="d-flex justify-content-end">
           <button className="btn btn-secondary me-2" onClick={onClose}>Cancelar</button>

@@ -1,0 +1,32 @@
+# Ignorar node_modules de ambos os projetos
+/backend/node_modules/
+/frontend/node_modules/
+
+# Ignorar uploads de imagem (se você usa para imagens reais salvas)
+**/public/uploads/
+/backend/public/uploads/
+/frontend/public/uploads/
+
+# Ignorar builds e pastas do Next.js
+/frontend/.next/
+/frontend/out/
+
+# Arquivos de lock, build e debug
+*.log
+*.tsbuildinfo
+*.pem
+.DS_Store
+
+# Ignorar configurações locais de IDEs
+.vscode/
+.idea/
+
+# Arquivos temporários
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.webp
+
+# Ignorar variáveis de ambiente
+**/.env*
