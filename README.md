@@ -56,7 +56,7 @@ cd painel-produtos-zaply
 cd backend
 npm install
 # Configure o arquivo .env com suas credenciais
-npm run dev
+node server.js
 
 # Frontend
 cd ../frontend
