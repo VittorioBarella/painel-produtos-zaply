@@ -1,3 +1,7 @@
+/**
+ * Middleware responsável pelo upload de arquivos usando Multer.
+ * Define o destino como a pasta /uploads e renomeia os arquivos com timestamp para evitar conflitos.
+ */
 import multer from 'multer';
 import path from 'path';
 import { fileURLToPath } from 'url';

@@ -1,3 +1,8 @@
+/**
+ * Define as rotas da API para manipulação de produtos.
+ * Conecta os endpoints aos controllers e aplica o middleware de upload de imagens.
+ * Inclui uma rota de teste para inserção direta no banco com UUID.
+ */
 import express from 'express';
 import {
   getAllProducts,

@@ -1,3 +1,9 @@
+/**
+ * Componente principal que exibe a tabela de produtos.
+ * Realiza operações de listagem, busca, edição, exclusão e criação.
+ * Usa modais reutilizáveis para criar ou editar produtos.
+ * Conecta-se à API usando o serviço centralizado e mostra toasts de feedback.
+ */
 'use client'
 
 import { useState, useEffect } from 'react'

@@ -1,3 +1,8 @@
+/**
+ * Modal para criação de novos produtos.
+ * Faz validação de campos e upload de imagem com preview.
+ * Envia os dados via multipart/form-data para o backend.
+ */
 'use client'
 
 import { useState } from 'react'

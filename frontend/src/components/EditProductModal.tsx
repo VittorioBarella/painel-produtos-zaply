@@ -1,3 +1,8 @@
+/**
+ * Modal de edição de produto.
+ * Permite alteração de nome, marca, categoria, preço e imagem do produto.
+ * Realiza preview da nova imagem e envia atualização para o backend via API.
+ */
 'use client'
 
 import { useEffect, useState } from 'react'

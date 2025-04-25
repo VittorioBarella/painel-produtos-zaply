@@ -1,3 +1,8 @@
+/**
+ * Layout raiz da aplicação.
+ * Aplica o CSS global e define metadados básicos.
+ * Utiliza estrutura Next.js App Router com suporte a SSR e hydration.
+ */
 import './globals.css'
 
 export const metadata = {

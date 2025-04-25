@@ -1,3 +1,9 @@
+/**
+ * Arquivo principal do servidor backend.
+ * Configura o Express, middlewares e rotas.
+ * Realiza conexão com o banco PostgreSQL (Railway).
+ * Expõe os endpoints da API e serve arquivos estáticos (como imagens).
+ */
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
@@ -7,6 +13,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
+// Carrega variáveis de ambiente do .env
 dotenv.config();
 
 const app = express();
@@ -15,7 +22,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 // Middlewares
-app.use(cors());
+app.use(cors()); // Habilita CORS
+// Permite leitura de JSON no body
 app.use(express.json());
 
 // Testa conexão com o banco de dados

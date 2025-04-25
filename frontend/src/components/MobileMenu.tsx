@@ -1,3 +1,8 @@
+/**
+ * Menu mobile responsivo.
+ * Exibe a opção "Novo Produto" .
+ * Utiliza ícone de hambúrguer  para abrir e fechar o menu.
+ */
 'use client'
 
 import { useState } from 'react'
@@ -27,10 +32,6 @@ export default function MobileMenu({ onNewProduct }: Props) {
 
           <button className="btn btn-outline-light mb-2" onClick={onNewProduct}>
             Novo Produto
-          </button>
-
-          <button className="btn btn-outline-light" onClick={() => alert('Função sair ainda não implementada.')}>
-             Sair
           </button>
         </div>
       )}

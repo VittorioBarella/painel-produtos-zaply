@@ -1,3 +1,7 @@
+/**
+ * Configuração da conexão com o banco de dados PostgreSQL usando Pool do pg.
+ * Lê a URL de conexão do arquivo .env (DATABASE_URL) e habilita SSL para ambientes externos como Railway.
+ */
 import pg from 'pg';
 import dotenv from 'dotenv';
 

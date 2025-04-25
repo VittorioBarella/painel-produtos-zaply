@@ -1,3 +1,8 @@
+/**
+ * Página de erro 404 customizada para rotas não encontradas.
+ * Fornece feedback visual amigável com botão para retornar à Home.
+ * Utiliza Bootstrap para layout centralizado e responsivo.
+ */
 'use client'
 
 import Link from 'next/link'

@@ -1,3 +1,9 @@
+/**
+ * Controller responsável pelas operações CRUD de produtos.
+ * Inclui lógica para manipulação de imagens (upload, exclusão).
+ * Utiliza banco PostgreSQL com UUID como chave primária.
+ */
+
 import db from '../models/db.js';
 import fs from 'fs';
 import path from 'path';
