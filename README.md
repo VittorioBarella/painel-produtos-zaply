@@ -1,4 +1,4 @@
-# Painel de Produtos - Zaply
+# Painel de Produtos
 
 Este é um painel de gestão de produtos com frontend em 
 **Next.js (TypeScript) e backend em **Node,js + PostreSQL**, hospedado no **Vercel** (frontend) e **Raiway** (backend).
