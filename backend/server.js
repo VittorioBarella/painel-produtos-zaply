@@ -22,7 +22,12 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 // Middlewares
-app.use(cors()); // Habilita CORS
+app.use(
+  cors({
+    origin: 'https://painel-produtos-vittorios-projects-eaa54a5f.vercel.app',
+  }),
+);
+// Habilita CORS
 // Permite leitura de JSON no body
 app.use(express.json());
 
